@@ -130,7 +130,12 @@ function Register({ onBack, onSuccess, onRegister, onSwitchToLogin }) {
         Gender: form.Gender,
         Occupation: form.Occupation.trim(),
       };
+      
+      console.log('Submitting registration with payload:', payload);
+      
       const created = await parentService.createParent(payload);
+      console.log('Registration successful:', created);
+      
       setSuccess(true);
       // After successful register, call onRegister if provided, otherwise fall back to onSuccess
       setTimeout(() => {
@@ -141,7 +146,28 @@ function Register({ onBack, onSuccess, onRegister, onSwitchToLogin }) {
         }
       }, 800);
     } catch (err) {
-      setError(err?.message || 'Registration failed');
+      console.error('Registration error:', err);
+      
+      // Extract more specific error information
+      let errorMessage = 'Registration failed';
+      
+      if (err?.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err?.response?.data?.error) {
+        errorMessage = err.response.data.error;
+      } else if (err?.message) {
+        errorMessage = err.message;
+      } else if (err?.response?.status === 404) {
+        errorMessage = 'Registration service not found. Please check if the backend is running.';
+      } else if (err?.response?.status === 500) {
+        errorMessage = 'Server error during registration. Please try again.';
+      } else if (err?.code === 'ECONNREFUSED') {
+        errorMessage = 'Cannot connect to registration service. Please check your internet connection and try again.';
+      } else if (err?.code === 'NETWORK_ERROR') {
+        errorMessage = 'Network error. Please check your connection and try again.';
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -163,6 +189,22 @@ function Register({ onBack, onSuccess, onRegister, onSwitchToLogin }) {
             <p className="mt-2 text-center text-sm text-gray-600">
               Your parent account has been created successfully.
             </p>
+            {form.isMock && (
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-sm text-blue-700">
+                  <strong>Note:</strong> This is a mock registration (backend not available). 
+                  Your data is stored locally for testing purposes.
+                </p>
+              </div>
+            )}
+            <div className="mt-6">
+              <button
+                onClick={() => onSwitchToLogin && onSwitchToLogin()}
+                className="w-full flex justify-center py-2.5 px-4 text-sm font-medium rounded-xl text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+              >
+                Continue to Login
+              </button>
+            </div>
           </div>
         </div>
       </div>

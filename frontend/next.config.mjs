@@ -9,6 +9,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Standalone output for server deployment (EC2)
+  output: 'standalone',
 }
 
 export default nextConfig

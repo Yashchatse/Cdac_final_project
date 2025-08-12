@@ -1,7 +1,8 @@
 // services/timetableService.ts
 import axios from 'axios';
 
-const BASE_URL = 'https://localhost:44317/admin/Admins';
+const BASE_ROOT = (process.env.NEXT_PUBLIC_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000');
+const BASE_URL = `${BASE_ROOT.replace(/\/$/, '')}/admin/Admins`;
 
 // Configure axios with default settings
 const api = axios.create({

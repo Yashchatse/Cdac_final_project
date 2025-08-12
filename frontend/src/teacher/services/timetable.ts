@@ -17,7 +17,7 @@ export type APITimetable = {
 export type SchoolClass = { classId: number; className: string }
 export type Subject = { subjectId: number; name: string }
 
-const API_BASE = "https://localhost:44317"
+const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL || (typeof window !== 'undefined' ? (window as any).__NEXT_PUBLIC_API_BASE_URL : null) || 'http://localhost:5000') as string
 
 function getAuthToken(): string | null {
   // Prefer teacher token storage; fallback to global auth token
