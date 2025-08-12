@@ -36,12 +36,9 @@ export default function RoleSelection({ onRoleSelect }: RoleSelectionProps) {
 
   const handleRoleSelect = (roleId: string) => {
     setSelectedRole(roleId);
+    onRoleSelect(roleId);
   };
 
-  const handleContinue = () => {
-    if (!selectedRole) return;
-    onRoleSelect(selectedRole);
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -106,23 +103,9 @@ export default function RoleSelection({ onRoleSelect }: RoleSelectionProps) {
           })}
         </div>
 
-        <div className="mt-6">
-          <button
-            onClick={handleContinue}
-            disabled={!selectedRole}
-            className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white transition-colors duration-200 ${
-              selectedRole
-                ? 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            {selectedRole ? 'Continue' : 'Please select a role'}
-          </button>
-        </div>
-
         <div className="text-center">
           <p className="text-xs text-gray-500">
-            Select your role and click Continue to proceed to the appropriate login or registration page
+            Select your role to proceed to the appropriate login or registration page
           </p>
         </div>
       </div>

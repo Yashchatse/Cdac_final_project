@@ -10,6 +10,7 @@ import { Label } from "./ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Plus, Search, Edit, Trash2, Users, Loader2, CheckCircle, AlertCircle } from "lucide-react"
 import { useStudent } from "../hooks/useStudent"
+import { classService } from "../services/classService"
 
 // Define Student type interface
 interface Student {
@@ -23,6 +24,12 @@ interface Student {
   profilePhoto?: string
   createdAt?: string
   updatedAt?: string
+}
+
+interface SchoolClass {
+  classId: number
+  className?: string
+  section?: string
 }
 
 // Ensures dates are formatted as YYYY-MM-DD for inputs and API payloads
@@ -56,6 +63,7 @@ export function StudentManagement() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [editingStudent, setEditingStudent] = useState<Student | null>(null)
+  const [classes, setClasses] = useState<SchoolClass[]>([])
   const [newStudent, setNewStudent] = useState({ 
     name: "", 
     dob: "", 
@@ -70,6 +78,12 @@ export function StudentManagement() {
     fetchStudents()
   }, [fetchStudents])
 
+  useEffect(() => {
+    classService.getAllClasses()
+      .then((data) => setClasses(Array.isArray(data) ? data : []))
+      .catch((err) => console.error('Failed to load classes:', err))
+  }, [])
+
   const filteredStudents = (students as Student[]).filter(
     (student) =>
       student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -77,8 +91,8 @@ export function StudentManagement() {
   )
 
   const handleAddStudent = async () => {
-    if (!newStudent.name || !newStudent.enrollmentNo) {
-      alert("Name and Enrollment Number are required fields")
+    if (!newStudent.name || !newStudent.enrollmentNo || !newStudent.classId) {
+      alert("Name, Enrollment Number and Class are required")
       return
     }
 
@@ -90,7 +104,7 @@ export function StudentManagement() {
         gender: newStudent.gender || undefined,
         enrollmentNo: newStudent.enrollmentNo,
         bloodGroup: newStudent.bloodGroup || undefined,
-        classId: newStudent.classId > 0 ? newStudent.classId : undefined,
+        classId: newStudent.classId,
       })
       
       if (success) {
@@ -261,6 +275,26 @@ export function StudentManagement() {
                     <SelectItem value="AB-">AB-</SelectItem>
                     <SelectItem value="O+">O+</SelectItem>
                     <SelectItem value="O-">O-</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="classId" className="text-gray-300">
+                  School Class *
+                </Label>
+                <Select
+                  value={newStudent.classId ? String(newStudent.classId) : ""}
+                  onValueChange={(val) => setNewStudent({ ...newStudent, classId: Number(val) })}
+                >
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                    <SelectValue placeholder="Select class" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {classes.map((c) => (
+                      <SelectItem key={c.classId} value={String(c.classId)}>
+                        {(c.className || `Class ${c.classId}`) + (c.section ? ` - ${c.section}` : "")}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

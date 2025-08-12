@@ -59,16 +59,7 @@ export default function Login({ onLogin, onBack }: LoginProps) {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          {onBack && (
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={onBack}
-              className="self-start mb-2"
-            >
-              ← Back to Role Selection
-            </Button>
-          )}
+         
           <CardTitle className="text-2xl font-bold text-center">
             Admin Login
           </CardTitle>
@@ -109,6 +100,16 @@ export default function Login({ onLogin, onBack }: LoginProps) {
             </Button>
           </form>
         </CardContent>
+         {onBack && (
+           <Button
+           type="button"
+           variant="ghost"
+           onClick={onBack}
+           className="self-start mb-2"
+           >
+              ← Back to Role Selection
+            </Button>
+          )}
       </Card>
     </div>
   );

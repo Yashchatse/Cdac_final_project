@@ -122,7 +122,7 @@ function ParentLogin({ onBack }) {
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
             
-            {onBack && (
+            {/* {onBack && (
               <button
                 type="button"
                 onClick={onBack}
@@ -130,7 +130,7 @@ function ParentLogin({ onBack }) {
               >
                 Back to Main Login
               </button>
-            )}
+            )} */}
           </div>
         </form>
       </div>

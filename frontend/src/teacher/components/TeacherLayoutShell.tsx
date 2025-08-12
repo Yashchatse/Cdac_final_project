@@ -17,8 +17,16 @@ export default function TeacherLayoutShell({ children }: { children: React.React
     }
   }, [])
 
+  const handleBackToRoleSelection = () => {
+    // Redirect to the main role selection page
+    window.location.href = '/'
+  }
+
   if (!authed) {
-    return <TeacherLogin onLoggedIn={(u) => { setUser(u); setAuthed(true) }} />
+    return <TeacherLogin 
+      onLoggedIn={(u) => { setUser(u); setAuthed(true) }} 
+      onBack={handleBackToRoleSelection}
+    />
   }
 
   return (
